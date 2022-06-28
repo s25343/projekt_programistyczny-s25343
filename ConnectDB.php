@@ -1,8 +1,8 @@
 <?php
-$servername = "127.0.0.1";
-$database = "MoviesDB";
-$username = "root";
-$password = "";
+$servername = "eu-cdbr-west-02.cleardb.net";
+$database = "heroku_a12636170312c9e";
+$username = "b17011b3e024df";
+$password = "218b7434";
 
 $conn = mysqli_connect($servername, $username, $password, $database, 3306);
 if (!$conn) {

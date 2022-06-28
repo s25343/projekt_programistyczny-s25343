@@ -33,7 +33,7 @@
                     <button onclick = "toggleModal('.login-modal')" type = "button" class="btn btn-outline-light me-2" >Login</button >
                     <button onclick="toggleModal('.signin-modal')" type = "button" class="btn btn-primary" style = "width: 100px">Sign-up</button >
                 </form>
-            <?php };
+            <?php }
             ?>
         </div>
     </nav>

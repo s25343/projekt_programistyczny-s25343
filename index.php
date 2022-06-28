@@ -6,9 +6,9 @@ session_start();
      checkLogin($_POST["email"], $_POST["password"]); }
  if(isset($_POST["movieLikeId"])){
      addReview($_POST["movieLikeId"]); }
-if(isset($_POST["id_film"])){
-    setComment();
-} ?>
+ if(isset($_POST["id_film"])){
+    setComment(); }
+?>
 <head>
     <style>
         body {
@@ -38,6 +38,7 @@ if(isset($_POST["id_film"])){
         if(isset($_SESSION["session"])) { ?>
             <a href="./Profile.php" class="btn btn-primary me-2">Profile</a>
             <a href="./Logout.php" class="btn btn-primary">Log out</a>
+            <button onclick = "toggleModal('.add-modal')" type = "button" class="btn btn-outline-light me-2" >Add film</button >
        <?php } else { ?>
             <form class="d-flex m-2">
                 <button onclick = "toggleModal('.login-modal')" type = "button" class="btn btn-outline-light me-2" >Login</button >
@@ -49,7 +50,7 @@ if(isset($_POST["id_film"])){
     </nav>
 </header>
 
-<main class="conteiner">
+<main class="container">
     <section class="py-5 text-center container dark">
         <div class="col-lg-6 col-md-8 mx-auto">
             <h1 class="display-2 fw-dark text-light">Movies</h1>
@@ -71,6 +72,9 @@ if(isset($_POST["id_film"])){
                     <input class="form-control me-2" name="year" type="search" placeholder="Year" aria-label="Choose year">
                     <button class="btn btn-outline-primary text-light me-4" type="submit">Year</button>
                 </form>
+            <form action="index.php" method="post" class="d-flex m-2" role="search">
+                <button class="btn btn-outline-primary text-light me-4" name="Popularity" role="search">Sort by most popular movie</button>
+            </form>
         </div>
     </section>
     <section class="d-flex w-100 aling-items-center justify-content-center">
@@ -84,8 +88,10 @@ if(isset($_POST["id_film"])){
         } else if(isset($_POST['Search'])) {
             GetCards("SELECT * FROM Films WHERE title LIKE '%$_POST[Search]%'");
         } else if(isset($_POST['year'])){
-            GetCards("SELECT * FROM Films WHERE date LIKE '%$_POST[year]%'");
-        } else {
+            GetCards("SELECT * FROM Films WHERE date LIKE '%$_POST[year]%' ORDER BY '%$_POST[year]%'");
+         } else if(isset($_POST['Popularity'])){
+            popularitySort();
+        }  else {
             GetCards("SELECT * FROM Films");
         } ?>
         </div>
@@ -120,6 +126,24 @@ if(isset($_POST["id_film"])){
                         <input class="form-control me-2 mb-2" name="signInEmail" type="email" placeholder="Login" aria-label="Login">
                         <input class="form-control me-2 mb-2" name="signInPassword" type="password" placeholder="Password" aria-label="Password">
                         <button type="submit" class="btn btn-primary">Sign-up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal add-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add movie</h5>
+                    <button onclick="toggleModal('.add-modal')" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./AddValue.php" method="post">
+                        <input class="form-control me-2 mb-2" name="title_add" type="text" placeholder="Title" aria-label="Title">
+                        <input class="form-control me-2 mb-2" name="genre_add" type="text" placeholder="Genre" aria-label="Genre">
+                        <input class="form-control me-2 mb-2" name="date" type="date" placeholder="Date" aria-label="Date">
+                        <button type="submit" class="btn btn-primary" name="submitSag">Add</button>
                     </form>
                 </div>
             </div>

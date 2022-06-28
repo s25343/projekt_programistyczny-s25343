@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <?php
-require "Functions.php";
+require "AddMovie.php";
+require "deleteMovie.php";
 session_start();
-    if(isset($_SESSION["session"])){
-    } else {
-        header('location: index.php');
-    }  ?>
+if(isset($_SESSION["session"])){
+
+} else {
+    header('location: index.php');
+}  ?>
 <html>
 <head>
     <style>
@@ -25,16 +27,20 @@ session_start();
     <nav class="navbar bg-dark">
         <div class="container-fluid">
             <a class="d-flex btn btn-outline-success text-light m-2"  href="./">Main</a>
-            <div class="d-flex text-light m-2"><h3><span class='badge rounded-pill bg-success'>Liked</span></h3></div>
-                <a href="./Logout.php" class="btn btn-primary">Log out</a>
-            <a href="./AddValue.php" class="btn btn-outline-light me-2">Your suggestions</a>
+            <div class="d-flex text-light m-2"><h3><span class='badge rounded-pill bg-success'>Suggestions</span></h3></div>
+            <a href="./Logout.php" class="btn btn-primary">Log out</a>
         </div>
     </nav>
 </header>
 <main>
-    <?php
-    getCards("SELECT * FROM Films INNER JOIN Reviews ON Films.id = Reviews.id_film WHERE Reviews.id_user = $_SESSION[id]");
-    ?>
+
+<?php
+require "db/ConnectDB.php";
+    addMovie();
+//    if(isset($_POST['delete'])){
+//        deleteAdd();
+//    }
+?>
 </main>
 </body>
 </html>

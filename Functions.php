@@ -21,7 +21,6 @@ function GetCards($sql){
     }
     mysqli_close($conn);
 }
-//date_default_timezone_set('Europe/Warsaw');
 
 function GetMoviePage($sql){
     $conn = require "db/ConnectDB.php";
@@ -40,6 +39,7 @@ function GetMoviePage($sql){
                         <div class='card-body'>
                             <div class='mb-1 card-text text-muted'>$row[director]<span class='badge rounded-pill bg-success' style='margin-left: 15vw'>$row[mark]</span></div>
                             <p class='card-text'>$row[description]</p>
+                            <p class='card-text'>$row[genre]</p>
                             <div><span class='badge rounded-pill bg-warning'><h6>Comments</h6></span></div>
                                 ".((isset($_SESSION['session'])) ? "<div class='card-footer py-3 border-0'>
                                     <div class='input-group mb-3'>
@@ -81,6 +81,7 @@ function GetMoviePage($sql){
                 <iframe src=$row[trailer] allowfullscreen></iframe>
             </div>
         </div>
+        ".getComment()."
     </div>";
         }
     }mysqli_close($conn);
@@ -104,7 +105,6 @@ function checkLogin($email, $pass) {
     }
     mysqli_close($conn);
 }
-
 function addReview($movieId){
     $userId = $_SESSION["id"];
     if (isset($movieId) && isset($userId)) {
@@ -143,4 +143,21 @@ function getComment(){
             $row[comments];";
     }
 }
+
+function popularitySort(){
+    $conn = require "db/ConnectDB.php";
+    $sql = "SELECT * FROM Films ORDER BY mark";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            echo "<div class='card bg-dark m-2'>
+    <div class='card p-3 bg-dark d-flex m-5' style='margin: 10px'>
+<div class='card-title text-light'>$row[title]</div>
+<div class='card-body text-secondary'>$row[genre]<span class='badge rounded-pill bg-success' style='margin-left: 15vw'>$row[mark]</span>
+<a href='./?id=$row[id]' value='Show details' class='btn btn-primary'>Show details</a></div>
+</div></div>";
+        }
+    }
+}
+
 ?>
