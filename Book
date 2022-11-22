@@ -1,0 +1,165 @@
+1.	Typy generyczne
+•	Potrafi zdefiniować własny typ generyczny
+public class Question1<T> {
+}
+
+•	Potrafi użyć parametr typu wewnątrz definicji klasy lub interfejsu np. 
+o	typ pola w klasie,
+o	typ wyniku metody
+o	typ parametru metody
+public class Question1<T> {
+    private T field1;
+    public T foo(T parameter){
+       return null; 
+    }
+}
+
+•	Potrafi nałożyć ograniczenia na parametr typu
+public class Question1<T extends Object>
+•	Potrafi utworzyć zmienną typu generycznego
+T variable = null;
+•	Wildcards (<?>)
+       List<Circle> wildcardShapes = new ArrayList<>();
+        show(wildcardShapes);
+        List<Oval> ovals = new ArrayList<>();
+        show(ovals);
+    }
+    void show(List<? extends Shape> shapes) {
+        shapes.forEach(sh -> System.out.println(sh.hashCode()));
+    }
+
+2.	Wyrażenia Lambda
+•	Potrafi Zdefiniować interfejs, który można użyć jako lambdę
+•	Potrafi stosować lambdy jako wartości zmiennych, parametrów metod lub konstruktorów
+•	Potrafi definiować własne klasy, z wykorzystaniem lambd 
+@FunctionalInterface
+public interface Question2 {
+    void call(String var);
+}
+class main {
+    Question2 lambda;
+
+    main(Question2 lambda) {
+        this.lambda = lambda;
+    }
+    void test1() {
+        Question2 lambda = (String var) -> System.out.println(var);
+        lambda.call("labial");
+    }}
+•	Zna podstawowe zaimplementowane w Javie lambdy, tj. Function, Predicate, Consumer, Supplier
+Function<String, Integer> lengthLambda = (String in) -> in.length(); // accepts String returns Integer
+Predicate<String> emptyLambda = (String in) -> in.isEmpty();  // accepts String returns Boolean
+
+Consumer<Error> errorConsumer = (Error e) -> System.out.println(e.getMessage());  // accepts String returns void
+
+Supplier<String> supplier = () -> "lalala"; // accepts nothing returns String
+
+void test() {
+    Integer a = lengthLambda.apply("lalala"); // a = 6
+    Boolean b = emptyLambda.test(""); // b = true;
+
+    try {
+        throw new Error("Sample error");
+    } catch (Error e) {
+        errorConsumer.accept(e);
+    }
+    
+    System.out.println(supplier.get()); // lalala
+}
+
+3.	Strumienie na kolekcjach
+•	Potrafi za wykorzystaniem strumieni:
+o	Filtrować elementy kolekcji (metoda filter)
+o	Mapować obiekty na obiekty innego typu (metoda map)
+o	Sprawdzać czy elementy w kolekcji spełniają zadany warynek (metody anyMatch, allMatch)
+o	Korzystać z metod takich jak: distinct, skip, limit, sorter
+o	Korzystać z kolektorów (np. zamiany kolekcji na mape, grupować obiekty, wykonywać proste obliczenia)
+public class Question3 {
+    List<Integer> numbers = List.of(1, 3, 4, 5, 6, 7, 8, 9, 53, 8, 76, 65756, 98, 0, 98);
+
+    void test() {
+        var a = numbers.stream()
+                .filter(n -> n < 50)
+                .map(n -> n * n)
+                .allMatch(n -> n > 0); // a = true
+
+        var b = List.of(1, 1, 2, 3, 4, 4, 4, 5).stream().distinct().toList(); // [1, 2, 3, 4, 5]
+        var c = Stream.of(1, 1, 2, 3, 4, 4, 4, 5).skip(2).limit(4).toList(); // [2, 3, 4, 4]
+        var d = Stream.of(1, 1, 2, 3, 4, 4, 4, 5).sorted(); // sort
+
+        var e = numbers.stream()
+                .filter(n -> n < 50)
+                .collect(Collectors.toMap(n -> n, n -> n * n)); // { 1, 1 }, {3, 9}, { 4, 16 } ..... // one to one relation
+
+        var f = Stream.of(new Book(), new Book(), new Book()).collect(Collectors.groupingBy(Book::getType));// one to many relation
+        var g = numbers.stream().mapToLong(n -> n).average().orElse(Double.NaN);
+        var h = numbers.stream().mapToLong(n -> n).max().orElse(Long.MAX_VALUE);
+    }
+}
+
+class Book {
+    private int number;
+    private BookType type;
+    public BookType getType() {
+        return type;
+    }
+}
+enum BookType {
+    Type1,
+    Type2,
+    Type3
+}
+
+4.	Refleksje:
+•	Zna podstawowe api klasy Class<?>:
+o	Potrafi odczytać nazwę klasy, nazwę pakietu
+o	Potrafi wybrać kolekcję metod
+o	Potrafi wybrać kolekcję pól w klasie
+package org.example;
+public class Question4 {
+    void main() {
+        var a = this.getClass().getName();  //Question4
+        var b = this.getClass().getPackageName(); // org.example
+        var c = this.getClass().getDeclaredMethods(); // Method[]
+        var d = this.getClass().getDeclaredFields(); // Field[]
+        
+•	Zna podstawowe api klasy Method:
+o	Potrafi sprawdzić nazwę metody
+o	Potrafi sprawdzić modyfikator metody
+o	Potrafi sprawdzić typ obiektu zwracanego przez metodę
+o	Potrafi sprawdzić liczbę i typy parametrów
+o	Potrafi wywołać metodę na obiekcie
+•	Zna podstawowe api klasy Constructor:
+o	Potrafi utworzyć nową instancję obiektu
+Method method = this.getClass().getDeclaredMethod("main");
+var e = method.getName(); // "main"
+var f = Modifier.isPrivate(method.getModifiers()); // false
+var g = method.getReturnType(); // Class<void> (g.getName() == "void")
+var h = method.getParameterCount(); // 2
+var i = Arrays.stream(method.getParameters()).map(parameter -> parameter.getType().getName()).toList(); //List<String>
+var j = method.invoke("lalala");
+Constructor<?> constructor = Class.forName("org.example.Question4").getConstructor(String.class);
+Object myObj = constructor.newInstance("lalala");
+
+5.	Adnotacje
+•	Potrafi zdefiniować własną adnotację
+•	Potrafi zdefiniować parametry adnotacji, w tym wartości domyślne
+•	Potrafi zdefiniować gdzie i kiedy adnotacja może być użyta (@Retention, @Targe)
+•	Korzystająć z api refleksji:
+o	Potrafi sprawdzić czy dana adnotacja została użyta na klasie, polu, metodzie itd…
+o	Potrafi sprawdzić wartości parametrów jakie zostały zadeklarowane w adnotacji
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface Annotation{
+  String message() default "lalala";
+}
+
+@Annotation(message = "brbbrb")
+public class Question5 {
+  void main() {
+    var a = this.getClass().isAnnotationPresent(Annotation.class); // true
+    var b = this.getClass().getAnnotation(Annotation.class); // Annotation
+    var c = b.message(); // brbbrb
+  }
+}
+
